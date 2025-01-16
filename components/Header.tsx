@@ -8,8 +8,8 @@ const Header = () => {
     <View
         className="
           px-7
-          w-full h-[270px]  bg-violet-600
-          rounded-b-[60px] relative
+          w-full h-[200px]  bg-[#7C3AED]
+          rounded-b-[40px] relative
           items-center
         "
       >

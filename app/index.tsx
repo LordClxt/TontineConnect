@@ -1,11 +1,12 @@
-import { Redirect, Stack } from "expo-router";
-import React from "react";
-import { Text, View } from "react-native";
 
+import { Redirect, Stack } from "expo-router";
+import React, { useRef } from "react";
 export default function Index() {
+
+
   return (
     <>
-      <Stack.Screen options={{
+      <Stack.Screen options = {{
         headerShown: false
       }} />
       <Redirect href="/home" />

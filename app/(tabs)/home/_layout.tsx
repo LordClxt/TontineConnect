@@ -26,7 +26,17 @@ const _layout = () => {
         },
         drawerActiveTintColor:'#6d28d9',
         drawerInactiveTintColor:'#6d28d9',
-        drawerActiveBackgroundColor:'white'
+        drawerActiveBackgroundColor:'white',
+        headerStyle:{
+          backgroundColor:'#7C3AED',
+          shadowColor:'#7C3AED'
+        },
+        headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontSize: 25,
+            fontWeight: "bold",
+            color: "white",
+          },
       })}
     >
       <Drawer.Screen
@@ -41,23 +51,17 @@ const _layout = () => {
               color="white"
             />
           ),
-          headerTransparent: true,
-          headerTitleAlign: "center",
-          headerTitleStyle: {
-            fontSize: 25,
-            fontWeight: "bold",
-            color: "white",
-          },
           drawerItemStyle:{
             borderRadius:0,
-            borderBottomWidth:0,
-            marginVertical:20,
+            borderBottomWidth:3,
+            borderBottomColor:'#6d28d9',
+            paddingVertical:15,
+            marginTop:40
           },
-          drawerLabelStyle:{
-            fontWeight:'bold',
-            textAlign:'center',
-            fontSize:25
-          }
+          drawerIcon:({color, size})=><Ionicons name="home" 
+          color={color} size={size} />,
+          drawerLabel:'Acceuil'
+          
         }}
       />
       <Drawer.Screen name="user" options={{
@@ -69,16 +73,6 @@ const _layout = () => {
         title:"Paramètre",
         drawerIcon:({color, size})=><Ionicons name="settings" 
         color={color} size={size} />
-      }} />
-      <Drawer.Screen name="contactez_nous" options={{
-        title:"Contactez-nous",
-        drawerIcon:({color, size})=><Ionicons name="phone-portrait" 
-        color={color} size={size} />,
-        drawerItemStyle:{
-          borderRadius:0,
-          borderBottomWidth:0,
-          paddingVertical:15,
-        },
       }} />
       <Drawer.Screen name="deconnexion" options={{
         title:"DECONNEXION",

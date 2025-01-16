@@ -6,19 +6,21 @@ interface ActionButtonProps {
   children: string;
   name?: string;
   color: string;
+  onPress?:()=>void
 }
 
 const ActionButton: React.FC<ActionButtonProps> = ({
   children,
   name,
   color,
+  onPress
 }) => {
   return (
     <View
-      className=" border-2 border-violet-600 py-5 justify-center 
+      className=" border-2 border-violet-600 justify-center 
       items-center bg-violet-200 flex-1 rounded"
     >
-      <Pressable>
+      <Pressable onPress={onPress} className="py-5 w-full items-center">
         <View className="items-center">
           <Ionicons
             name={name as keyof typeof Ionicons.glyphMap}

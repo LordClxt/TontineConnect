@@ -12,7 +12,7 @@ const Button: React.FC<ButtonProps> = ({children, rippleEffect, className, onPre
   
   return (
     <View className={`${className} text-white rounded-xl overflow-hidden`}>
-      <Pressable className='py-2' onPress={onPress} android_ripple={{color:rippleEffect}}>
+      <Pressable className='py-3' onPress={onPress} android_ripple={{color:rippleEffect}}>
         <Text className='text-white font-bold text-center'>
             {children}
         </Text> 

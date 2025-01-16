@@ -9,14 +9,21 @@ const index = () => {
     <>
         <Stack.Screen options={{
             title:'',
-            headerTransparent:true,
+            // headerTransparent:true,
+            headerStyle:{
+              backgroundColor:'#7C3AED'
+            },
+            headerShadowVisible:false
         }}  />
-        <View className='w-full h-full'>
-            <SimpleHeader>MES TRANSACTIONS</SimpleHeader>
-            <ScrollView  showsVerticalScrollIndicator={false} className='h-full my-4'>
-                <TransactionItems />
-            </ScrollView>
-        </View>
+        <ScrollView className='w-full h-full mb-20' showsVerticalScrollIndicator={false}>
+
+          <View className='w-full h-full'>
+              <SimpleHeader>MES TRANSACTIONS</SimpleHeader>
+              <ScrollView  showsVerticalScrollIndicator={false} className='h-full my-4'>
+                  <TransactionItems />
+              </ScrollView>
+          </View>
+        </ScrollView>
     </>
   )
 }
