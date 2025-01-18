@@ -12,7 +12,7 @@ const CoursePage = () => {
 
   const {data: courses, isLoading} = useQuery({
     queryKey:['epargne_cours'],
-    queryFn:()=> axios.get('http://192.168.1.7:8000/Cours').then(response=>response.data)
+    queryFn:()=> axios.get('http://192.168.1.5:8000/Cours').then(response=>response.data)
   })
 
 
@@ -34,7 +34,7 @@ const CoursePage = () => {
   }
 
   // Player permet de manipuler la video
-  const player = useVideoPlayer(`http://192.168.41.221:8000/static/videos/${activeVideo.video}`, (player) => {
+  const player = useVideoPlayer(`http://192.168.43.189:8000/static/videos/${activeVideo.video}`, (player) => {
     player.loop = true; //Permet de jouer la video en boucle // player.staysActiveInBackground = true; // Permet a la video de continuer a jouer meme si elle est en arriere plan
     player.play(); // Si nous voulons que la video se joue automatiquement
   });

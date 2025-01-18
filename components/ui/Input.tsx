@@ -6,6 +6,8 @@ interface InputInterface {
   label: string;
   value?: string;
   placeholder?: string;
+  onChange?:((text:string)=>void) | undefined,
+  isPassword?:boolean
 }
 
 const Input: React.FC<InputInterface> = ({
@@ -13,6 +15,8 @@ const Input: React.FC<InputInterface> = ({
   label,
   value,
   placeholder,
+  onChange,
+  isPassword
 }) => {
   return (
     <View className="gap-1 my-2">
@@ -24,7 +28,7 @@ const Input: React.FC<InputInterface> = ({
       >
         {label}
       </Text>
-      <TextInput placeholder={placeholder} className="border border-gray-400 rounded-xl px-2" />
+      <TextInput secureTextEntry={isPassword} value={value} onChangeText={onChange} placeholder={placeholder} className="border border-gray-400 rounded-xl px-3" />
     </View>
   );
 };

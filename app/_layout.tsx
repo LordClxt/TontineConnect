@@ -9,12 +9,16 @@ export default function RootLayout() {
     'Poppins-Bold':require('@/assets/fonts/Poppins-Bold.ttf')
   })
  
+  const queryClient = new QueryClient()
 
   return (
-      <Stack >
+    <QueryClientProvider client={queryClient}>
+      <Stack>
         <Stack.Screen name="(tabs)" options={{
-          headerShown:false
+          headerShown:false,
+          statusBarStyle:'dark'
         }} />
       </Stack>
+    </QueryClientProvider>
   )
 }

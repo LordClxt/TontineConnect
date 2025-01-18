@@ -22,7 +22,7 @@ const index = () => {
   const mutation = useMutation({
     mutationFn: (data) =>
       axios
-        .post("http://192.168.41.221:8000/Bot", data, {
+        .post("http://192.168.1.5:8000/Bot", data, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

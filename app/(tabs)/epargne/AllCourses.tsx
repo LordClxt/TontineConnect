@@ -11,7 +11,7 @@
 
     const {data, isLoading} = useQuery({
       queryKey:['epargne_cours'],
-      queryFn:()=> axios.get('http://192.168.41.221:8000/Cours').then(response=>response.data)
+      queryFn:()=> axios.get('http://192.168.1.5:8000/Cours').then(response=>response.data)
     })
 
     if(isLoading){
@@ -24,7 +24,7 @@
         <Stack.Screen
           options={{
             title: "",
-          //   headerTransparent: true,
+            //headerTransparent: true,
             headerStyle:{
               backgroundColor:'#7C3AED',            
             },
@@ -41,8 +41,7 @@
                   text-3xl my-3">
               COURS
             </Text>
-            
-            
+
             {/* TOUS LES COURS */}
             
             <Courses data={data} /> 
