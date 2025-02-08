@@ -5,6 +5,7 @@ import Input from '@/components/ui/Input'
 import PrimaryButton from '@/components/ui/PrimaryButton'
 import { Link, Stack, useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
+import { StatusBar } from 'expo-status-bar'
 const Inscription = () => {
   const router = useRouter()
   return (
@@ -12,6 +13,7 @@ const Inscription = () => {
       <Stack.Screen options={{
         // headerShown:false,
         headerTransparent:true,
+        statusBarStyle:'dark',
         title:'',
       }} />
       <ScrollView className="bg-white h-full">
