@@ -12,7 +12,7 @@ const CoursePage = () => {
 
   const {data: courses, isLoading} = useQuery({
     queryKey:['epargne_cours'],
-    queryFn:()=> axios.get('http://192.168.1.5:8000/Cours').then(response=>response.data)
+    queryFn:()=> axios.get('http://192.168.1.4:8000/Cours').then(response=>response.data)
   })
 
 

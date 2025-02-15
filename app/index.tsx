@@ -7,6 +7,7 @@ import store from '@/store/index'
 export default function Index() {
 
   const token = store((state)=>state.token)
+  
   if (token){
     return <>
     <Stack.Screen options = {{

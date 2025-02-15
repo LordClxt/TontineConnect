@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import MessageSection from "@/components/MessageSection";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import store from "@/store";
 
 function generateUniqueId() {
   return Date.now().toString(36) + Math.random().toString(36).substring(2);
@@ -18,14 +19,17 @@ function generateUniqueId() {
 
 const index = () => {
   const [messages, setMessages] = useState([]);
+  const token = store(state=>state.token)
 
   const mutation = useMutation({
     mutationFn: (data) =>
       axios
-        .post("http://192.168.1.5:8000/Bot", data, {
+        .post("http://192.168.1.4:8000/Bot", data, {
           headers: {
             "Content-Type": "multipart/form-data",
+            'Authorization':`bearer ${token}`
           },
+
         })
         .then((response) => response.data),
     onSuccess: (data) => {
@@ -75,7 +79,7 @@ const index = () => {
 
   return (
     <View className="bg-white relative w-full h-full">
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View className="flex-row h-[4rem] my-3 mx-3 items-center gap-3 ">
           <Text
             style={{ fontFamily: "Poppins-Bold", flex: 3 }}

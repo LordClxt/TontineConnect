@@ -6,12 +6,18 @@
   import { useQuery } from "@tanstack/react-query";
   import axios from "axios";
   import LoadingOverlay from "@/components/ui/LoadingOverlay";
+import store from "@/store";
 
   const AllCourses = () => {
 
+    const token = store(state=>state.token)
     const {data, isLoading} = useQuery({
       queryKey:['epargne_cours'],
-      queryFn:()=> axios.get('http://192.168.1.5:8000/Cours').then(response=>response.data)
+      queryFn:()=> axios.get('http://192.168.1.4:8000/Cours', {
+        headers:{
+          'Authorization':`bearer ${token}`
+        }
+      }).then(response=>response.data)
     })
 
     if(isLoading){

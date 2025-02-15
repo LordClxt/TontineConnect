@@ -15,7 +15,7 @@ const LoginPage = () => {
   const mutation = useMutation({
     mutationFn: (data) =>
       axios
-        .post("http://192.168.1.5:8000/auth/token", data, {
+        .post("http://192.168.1.4:8000/auth/token", data, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

@@ -3,9 +3,27 @@ import React, { useContext } from "react";
 import Button from "./ui/Button";
 import { useRouter } from "expo-router";
 import { BottomSheetRechargerContext } from "@/app/(tabs)/epargne";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import store from "@/store";
+import LoadingOverlay from "./ui/LoadingOverlay";
 
 const HeaderEpargne = () => {
 
+  const token = store((state) => state.token);
+  const {data, isLoading} = useQuery({
+    queryKey:['account_blockchain'],
+    queryFn:()=>axios.get(
+      `http://192.168.1.4:8000/blockchain/compte_utilisateur`,{
+        headers:{
+          'Authorization':`bearer ${token}`
+        }
+      }
+    ).then(res=>res.data),
+  });
+  if(isLoading){
+    return <LoadingOverlay />
+  }
   // @ts-ignore
   const {openRecharger, openRetirer} = useContext(BottomSheetRechargerContext)
   const router = useRouter()
@@ -20,7 +38,7 @@ const HeaderEpargne = () => {
           style={{ fontFamily: "Poppins-Bold" }}
           className="text-white text-[2.5rem] "
         >
-          20 000 FCFA
+          {data?.compte_epargne} FCFA
         </Text>
       </View>
       <View className="gap-2">

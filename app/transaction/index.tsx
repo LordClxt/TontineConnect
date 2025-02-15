@@ -20,7 +20,7 @@ const index = () => {
           <View className='w-full h-full'>
               <SimpleHeader>MES TRANSACTIONS</SimpleHeader>
               <ScrollView  showsVerticalScrollIndicator={false} className='h-full my-4'>
-                  <TransactionItems />
+                  <TransactionItems  />
               </ScrollView>
           </View>
         </ScrollView>

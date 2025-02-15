@@ -1,7 +1,13 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const TransactionItem = () => {
+interface TransactionInterface {
+  nom:string;
+  montant:string
+  date:string
+}
+
+const TransactionItem = ({nom, montant, date}:TransactionInterface) => {
   return (
     <View
         className="flex-row justify-between border-2 p-5 rounded
@@ -9,12 +15,12 @@ const TransactionItem = () => {
         "
           >
         <View className="flex-1 gap-1">
-            <Text className='font-bold'>Rechargement via wave</Text>
-            <Text>12/12/1999</Text>
+            <Text className='font-bold'>{nom}</Text>
+            <Text>{date}</Text>
         </View>
-        <View className="justify-center ">
-            <View className="bg-violet-500 px-7 py-2 rounded-full ">
-            <Text className="font-bold text-white">2000 fcfa</Text>
+        <View className="justify-center w-1/3 items-center">
+            <View className="bg-violet-500 w-full py-2 rounded-full ">
+            <Text className="font-bold text-white text-center">{montant} fcfa</Text>
             </View>
         </View>
     </View>

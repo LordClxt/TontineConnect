@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff",
         "package": "com.votre.tntin"
-      }
+      },
+      "package": "com.clxt225.Tontine_Connect"
     },
     "web": {
       "bundler": "metro",
@@ -39,6 +40,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9d2788e7-d9e5-446b-92a0-6a6246f71ed1"
+      }
     }
   }
 }

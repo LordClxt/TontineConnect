@@ -1,5 +1,5 @@
-import { View, Text, ScrollView } from "react-native";
-import React, { createContext, useRef, useState } from "react";
+import { View, Text, ScrollView, Platform } from "react-native";
+import React, { createContext, useEffect, useRef, useState } from "react";
 import Header from "@/components/Header";
 import ActionButtons from "@/components/ActionButtons";
 import TransactionItems from "@/components/ui/TransactionItems";
@@ -8,10 +8,16 @@ import { useRouter } from "expo-router";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Pressable, TextInput } from "react-native-gesture-handler";
 import { Entypo } from "@expo/vector-icons";
-
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import store from "@/store";
+import LoadingOverlay from "@/components/ui/LoadingOverlay";
 export const BottomSheetContext = createContext(null);
-
 const index = () => {
+
+  const queryClient = useQueryClient();
+  const token = store((state) => state.token);
+
   const recharcherRef = useRef<BottomSheet>(null);
   const retirerrRef = useRef<BottomSheet>(null);
   const snapPoints = ["48%"];
@@ -29,8 +35,45 @@ const index = () => {
   const openRetirer = () => {
     retirerrRef.current?.expand();
   };
+  //  Input recharger
+  const [numeroRecharger, setNumeroRecharger] = useState("");
+  const [montantRecharger, setMontantRecharger] = useState("");
+
+  //  Input retirer
+  const [numeroRetirer, setNumeroRetirer] = useState("");
+  const [montantRetirer, setMontantRetirer] = useState("");
+
+
+  // Mutations
+
+  const rechargerMutation = useMutation({
+    mutationFn: (data) =>
+      axios.post(`http://192.168.1.4:8000/blockchain/rechargeAccount`, data, {
+        headers: {
+          Authorization: `bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["account_blockchain"] });
+      setMontantRecharger("");
+      setNumeroRecharger("");
+      closeRecharger();
+    },
+  });
+
+
+  const handleRecharge = () => {
+    const data = {
+      montant: montantRecharger,
+      numero: numeroRecharger,
+    };
+    // @ts-ignore
+    rechargerMutation.mutate(data);
+  };
 
   const router = useRouter();
+
   return (
     // @ts-ignore
     <BottomSheetContext.Provider value={{ openRecharger, openRetirer }}>
@@ -52,12 +95,12 @@ const index = () => {
               voir tous
             </Button>
           </View>
-          <TransactionItems />
+          <TransactionItems limit={3} />
         </ScrollView>
         {/* BottomSheet Section */}
 
         <BottomSheet
-        index={-1}
+          index={-1}
           snapPoints={snapPoints}
           ref={retirerrRef}
           enablePanDownToClose={true}
@@ -85,11 +128,17 @@ const index = () => {
             </View>
             <View className="gap-6">
               <TextInput
+                keyboardType="number-pad"
+                value={numeroRetirer}
+                onChangeText={(text) => setNumeroRetirer(text)}
                 placeholder="Numéro de téléphone "
                 className="border border-gray-400 rounded-xl"
                 style={{ paddingVertical: 15, paddingHorizontal: 9 }}
               />
               <TextInput
+                keyboardType="number-pad"
+                value={montantRetirer}
+                onChangeText={(text) => setMontantRetirer(text)}
                 placeholder="Montant de recharge"
                 className="border border-gray-400 rounded-xl"
                 style={{ paddingVertical: 15, paddingHorizontal: 9 }}
@@ -129,7 +178,7 @@ const index = () => {
                 style={{ fontFamily: "Poppins-Bold", flex: 7 }}
                 className="text-xl"
               >
-                Recharger mon compte{" "}
+                Recharger mon compte
               </Text>
               <View style={{ flex: 1 }} className="">
                 <Pressable onPress={closeRecharger}>
@@ -138,19 +187,31 @@ const index = () => {
               </View>
             </View>
             <View className="gap-6">
-              <TextInput
-                placeholder="Numéro de téléphone "
-                className="border border-gray-400 rounded-xl"
-                style={{ paddingVertical: 15, paddingHorizontal: 9 }}
-              />
-              <TextInput
-                placeholder="Montant de recharge"
-                className="border border-gray-400 rounded-xl"
-                style={{ paddingVertical: 15, paddingHorizontal: 9 }}
-              />
+              {rechargerMutation.isPending ? (
+                <LoadingOverlay />
+              ) : (
+                <View className="gap-2">
+                  <TextInput
+                    keyboardType="number-pad"
+                    placeholder="Numéro de téléphone "
+                    value={numeroRecharger}
+                    onChangeText={(text) => setNumeroRecharger(text)}
+                    className="border border-gray-400 rounded-xl"
+                    style={{ paddingVertical: 15, paddingHorizontal: 9 }}
+                  />
+                  <TextInput
+                    keyboardType="number-pad"
+                    placeholder="Montant de recharge"
+                    value={montantRecharger}
+                    onChangeText={(text) => setMontantRecharger(text)}
+                    className="border border-gray-400 rounded-xl"
+                    style={{ paddingVertical: 15, paddingHorizontal: 9 }}
+                  />
+                </View>
+              )}
               <View className=" bg-violet-600 rounded ">
                 <Pressable
-                  onPress={closeRecharger}
+                  onPress={handleRecharge}
                   style={{ paddingVertical: 14 }}
                   android_ripple={{ color: "#6d28d9" }}
                 >
