@@ -12,6 +12,7 @@ import MessageSection from "@/components/MessageSection";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import store from "@/store";
+import { SERVER_IP } from "@/app/constant/server_ip";
 
 function generateUniqueId() {
   return Date.now().toString(36) + Math.random().toString(36).substring(2);
@@ -24,7 +25,7 @@ const index = () => {
   const mutation = useMutation({
     mutationFn: (data) =>
       axios
-        .post("http://192.168.1.4:8000/Bot", data, {
+        .post(`http://${SERVER_IP}:8000/Bot`, data, {
           headers: {
             "Content-Type": "multipart/form-data",
             'Authorization':`bearer ${token}`

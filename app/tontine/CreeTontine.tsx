@@ -9,17 +9,18 @@ const CreeTontine = () => {
     <>
         <Stack.Screen options={{
             title:'',
-            headerTransparent:true
+            headerTransparent:true,
+            statusBarStyle:'dark'
         }} />
         <View>
-            <View className='bg-violet-600 justify-center h-[19rem]'>
+            <View className='bg-violet-600 justify-center h-[25rem]'>
               <Text style={{
                 fontFamily:'Poppins-Bold',
-              }} className='text-center -mt-4 text-4xl text-white'>
+              }} className='text-center -mt-10 text-4xl text-white'>
                 Crée une tontine
               </Text>
             </View>
-            <View className=' h-full rounded-[50px] bg-white -mt-[3rem]'>
+            <View className=' h-full rounded-[50px] bg-white -mt-[5rem]'>
               <CreateTontineForm />
             </View>
         </View>

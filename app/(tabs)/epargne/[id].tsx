@@ -6,13 +6,14 @@ import LargeCourses from "@/components/LargeCourses";
 import LoadingOverlay from "@/components/ui/LoadingOverlay";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import {SERVER_IP} from "@/app/constant/server_ip";
 const localSource = require("@/assets/video/video.mp4");
 
 const CoursePage = () => {
 
   const {data: courses, isLoading} = useQuery({
     queryKey:['epargne_cours'],
-    queryFn:()=> axios.get('http://192.168.1.4:8000/Cours').then(response=>response.data)
+    queryFn:()=> axios.get(`http://${SERVER_IP}:8000/Cours`).then(response=>response.data)
   })
 
 
@@ -34,7 +35,7 @@ const CoursePage = () => {
   }
 
   // Player permet de manipuler la video
-  const player = useVideoPlayer(`http://192.168.43.189:8000/static/videos/${activeVideo.video}`, (player) => {
+  const player = useVideoPlayer(`http://${SERVER_IP}:8000/static/videos/${activeVideo.video}`, (player) => {
     player.loop = true; //Permet de jouer la video en boucle // player.staysActiveInBackground = true; // Permet a la video de continuer a jouer meme si elle est en arriere plan
     player.play(); // Si nous voulons que la video se joue automatiquement
   });

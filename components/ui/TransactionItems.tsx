@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import LoadingOverlay from './LoadingOverlay'
 import store from '@/store'
+import {SERVER_IP} from '@/app/constant/server_ip'
 
 const TransactionItems = ({limit, isEpargne}: {limit?:number, isEpargne?:boolean}) => {
 
@@ -12,7 +13,7 @@ const TransactionItems = ({limit, isEpargne}: {limit?:number, isEpargne?:boolean
 
   const {data, isLoading, isSuccess} = useQuery({
     queryKey:['transactions'],
-    queryFn:()=>axios.get('http://192.168.1.4:8000/blockchain/transactions/user', {
+    queryFn:()=>axios.get(`http://${SERVER_IP}:8000/blockchain/transactions/user`, {
       headers:{
         'Authorization': `bearer ${token}`
       }
@@ -39,9 +40,9 @@ const TransactionItems = ({limit, isEpargne}: {limit?:number, isEpargne?:boolean
             <View className=" gap-2">
               {
                 // @ts-ignore
-                transactions.reverse().slice(0, limit?limit:data.length)?.map((transaction: {nom:string, date:string, montant:string})=>{
+                transactions?.reverse().slice(0, limit?limit:data.length)?.map((transaction: {id:number, nom:string, date:string, montant:string})=>{
                   return (
-                    <TransactionItem date={transaction.date} nom={transaction.nom} montant={transaction.montant} />
+                    <TransactionItem key={transaction.id} date={transaction.date} nom={transaction.nom} montant={transaction.montant} />
                   )
                 })
               }

@@ -14,10 +14,9 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff",
-        "package": "com.votre.tntin"
+        "backgroundColor": "#ffffff"
       },
-      "package": "com.clxt225.Tontine_Connect"
+      "package": "com.clxt.tontine_connect"
     },
     "web": {
       "bundler": "metro",
@@ -44,9 +43,6 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "9d2788e7-d9e5-446b-92a0-6a6246f71ed1"
       }
     }
   }

@@ -7,13 +7,14 @@
   import axios from "axios";
   import LoadingOverlay from "@/components/ui/LoadingOverlay";
 import store from "@/store";
+import {SERVER_IP} from "@/app/constant/server_ip";
 
   const AllCourses = () => {
 
     const token = store(state=>state.token)
     const {data, isLoading} = useQuery({
       queryKey:['epargne_cours'],
-      queryFn:()=> axios.get('http://192.168.1.4:8000/Cours', {
+      queryFn:()=> axios.get(`http://${SERVER_IP}:8000/Cours`, {
         headers:{
           'Authorization':`bearer ${token}`
         }

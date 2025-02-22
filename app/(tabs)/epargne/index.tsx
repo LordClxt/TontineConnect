@@ -10,6 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import store from "@/store";
 import axios from "axios";
+import {SERVER_IP} from "@/app/constant/server_ip";
 export const BottomSheetRechargerContext = createContext(null)
 
 const index = () => {
@@ -40,7 +41,7 @@ const index = () => {
 
   const rechargerMutation = useMutation({
     mutationFn: (data) =>
-      axios.post(`http://192.168.1.4:8000/blockchain/rechargeEpargneAccount`, data, {
+      axios.post(`http://${SERVER_IP}:8000/blockchain/rechargeEpargneAccount`, data, {
         headers: {
           Authorization: `bearer ${token}`,
           "Content-Type": "multipart/form-data",

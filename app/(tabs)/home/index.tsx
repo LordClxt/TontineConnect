@@ -12,6 +12,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import store from "@/store";
 import LoadingOverlay from "@/components/ui/LoadingOverlay";
+import { SERVER_IP } from "@/app/constant/server_ip";
 export const BottomSheetContext = createContext(null);
 const index = () => {
 
@@ -48,7 +49,7 @@ const index = () => {
 
   const rechargerMutation = useMutation({
     mutationFn: (data) =>
-      axios.post(`http://192.168.1.4:8000/blockchain/rechargeAccount`, data, {
+      axios.post(`http://${SERVER_IP}:8000/blockchain/rechargeAccount`, data, {
         headers: {
           Authorization: `bearer ${token}`,
           "Content-Type": "multipart/form-data",

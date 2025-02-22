@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import store from "@/store";
 import LoadingOverlay from "./ui/LoadingOverlay";
+import {SERVER_IP} from "@/app/constant/server_ip";
 
 const HeaderEpargne = () => {
 
@@ -14,7 +15,7 @@ const HeaderEpargne = () => {
   const {data, isLoading} = useQuery({
     queryKey:['account_blockchain'],
     queryFn:()=>axios.get(
-      `http://192.168.1.4:8000/blockchain/compte_utilisateur`,{
+      `http://${SERVER_IP}:8000/blockchain/compte_utilisateur`,{
         headers:{
           'Authorization':`bearer ${token}`
         }

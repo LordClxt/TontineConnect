@@ -1,11 +1,11 @@
 import { View, Text, Pressable } from 'react-native'
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 interface ButtonProps {
-    children:string;
+    children:ReactElement | string;
     className?:string,
     onPress?:()=>void,
-    rippleEffect:string
+    rippleEffect?:string
 }
 
 const Button: React.FC<ButtonProps> = ({children, rippleEffect, className, onPress}) => {

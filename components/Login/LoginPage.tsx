@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import clsx from "clsx";
 import store from "@/store/index";
+import { SERVER_IP } from "@/app/constant/server_ip";
 const LoginPage = () => {
   const login = store((state) => state.login);
   const [error, setError] = useState("");
@@ -15,7 +16,7 @@ const LoginPage = () => {
   const mutation = useMutation({
     mutationFn: (data) =>
       axios
-        .post("http://192.168.1.4:8000/auth/token", data, {
+        .post(`http://${SERVER_IP}:8000/auth/token`, data, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
