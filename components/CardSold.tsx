@@ -21,12 +21,12 @@ export const CardSold = () => {
       }
     ).then(res=>res.data),
   });
+  // @ts-ignore
+  const { openRecharger, openRetirer } = useContext(BottomSheetContext);
   if(isLoading){
     return <LoadingOverlay />
   }
   
-  // @ts-ignore
-  const { openRecharger, openRetirer } = useContext(BottomSheetContext);
   return (
     <View
       style={{ elevation: 5 }}

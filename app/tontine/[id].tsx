@@ -2,13 +2,14 @@ import store from "@/store";
 import { useQuery } from "@tanstack/react-query";
 import { Stack, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Alert, ScrollView, Text, View } from "react-native";
 import { SERVER_IP } from "../constant/server_ip";
 import axios from "axios";
 import LoadingOverlay from "@/components/ui/LoadingOverlay";
 import Button from "@/components/ui/Button";
 import Status from "@/components/ui/Status";
 import Members from "@/components/Members";
+import TransactionItems from "@/components/ui/TransactionItems";
 
 const TontinePage = () => {
   const { id } = useLocalSearchParams();
@@ -26,6 +27,15 @@ const TontinePage = () => {
         })
         .then((res) => res.data),
   });
+
+  const { data: users, isLoading: userLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: () =>
+      axios
+        .get(`http://${SERVER_IP}:8000/user`)
+        .then((res) => res.data),
+  });
+
   const { data: membres, isLoading: membresLoading } = useQuery({
     queryKey: ["user", "tontine", id],
     queryFn: () =>
@@ -38,10 +48,52 @@ const TontinePage = () => {
         .then((res) => res.data),
   });
 
+  const { data: transactions, isLoading: transactionLoading } = useQuery({
+    queryKey: ["tontine_transactions", +id],
+    queryFn: () =>
+      axios
+        .get(
+          `http://${SERVER_IP}:8000/blockchain/transactions/tontines/${id}`,
+          {
+            headers: {
+              Authorization: `bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => res.data),
+  });
+
+  // Alerte pour validation de la contribution
+  const handleContribuate = () => {
+    Alert.alert("Confirmer la contribution", "Voulez vraiment continuez?", [
+      {
+        text: "Annuler",
+        style: "cancel",
+      },
+      {
+        text: "confirmer",
+        style: "default",
+      },
+    ]);
+  };
+
   const [select, setSelect] = useState("participants");
 
-  if (isLoading || membresLoading) {
+  if (isLoading || membresLoading || transactionLoading || userLoading) {
     return <LoadingOverlay />;
+  }
+
+  let BottomComponenet;
+  if (select == "participants") {
+    BottomComponenet = <Members membres={membres} />;
+  } else if (select == "transactions") {
+    BottomComponenet = (
+      <TransactionItems tontineId={+id} tontineTransactions={transactions} />
+    );
+  } else {
+    BottomComponenet = (
+      <Members membres={users.filter((user: { address: string }) => data.contributeurs.includes(user.address))} />
+    );
   }
 
   return (
@@ -54,7 +106,7 @@ const TontinePage = () => {
           headerTitleStyle: {
             color: "white",
           },
-          statusBarStyle:'dark'
+          statusBarStyle: "dark",
         }}
       />
       <ScrollView className="bg-white">
@@ -104,7 +156,7 @@ const TontinePage = () => {
               <View className="flex-row gap-2">
                 <Button
                   className="border flex-1 border-white"
-                  onPress={() => {}}
+                  onPress={() => handleContribuate()}
                 >
                   Contribuer
                 </Button>
@@ -118,17 +170,24 @@ const TontinePage = () => {
             </View>
           </View>
           <View>
-            <View className="flex-row ">
+            <View className="flex-row mb-5">
               <Status
                 isSelected={select == "participants"}
                 text="Participants"
+                onPress={() => setSelect("participants")}
               />
               <Status
                 isSelected={select == "transactions"}
                 text="Transactions"
+                onPress={() => setSelect("transactions")}
+              />
+              <Status
+                isSelected={select == "contributeurs"}
+                text="Contributeurs"
+                onPress={() => setSelect("contributeurs")}
               />
             </View>
-            <Members membres={membres} />
+            {BottomComponenet}
           </View>
         </View>
       </ScrollView>

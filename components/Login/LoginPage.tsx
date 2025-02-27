@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, StatusBar } from "react-native";
+import { View, Text, Image, ScrollView, StatusBar, Modal } from "react-native";
 import React, { useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Input from "../ui/Input";
@@ -23,8 +23,12 @@ const LoginPage = () => {
         })
         .then((response) => response.data),
     onSuccess: (data) => {
-      login(data.access_token, data.user);
-      router.push("/home");
+      setIsVisible(true)
+      setTimeout(()=>{
+        setIsVisible(false)
+        login(data.access_token, data.user);
+        router.push("/home");
+      }, 1000)
     },
     onError: (error) => {
       // @ts-ignore
@@ -34,6 +38,7 @@ const LoginPage = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isVisible, setIsVisible] = useState(false)
 
   const handleSubmit = () => {
     const data = {
@@ -46,6 +51,17 @@ const LoginPage = () => {
 
   return (
     <>
+      <Modal visible={isVisible} animationType="fade" transparent={true}>
+        <View
+        style={{flex:1, alignItems:'center', justifyContent:'center'}}
+        className="bg-black/50 backdrop-blur-sm"
+        >
+          <View className="bg-white w-4/5 p-10 rounded-lg">
+          <Text className="text-center font-poppins font-bold text-xl">CONNEXION TERMINER</Text>
+
+          </View>
+        </View>
+      </Modal>
       {/* <StatusBar barStyle="dark-content" /> */}
       <ScrollView className="bg-white h-full">
         <LinearGradient colors={["#A855F7", "#7C3AED"]}>

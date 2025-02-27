@@ -7,11 +7,13 @@ import axios from "axios";
 import { SERVER_IP } from "@/app/constant/server_ip";
 import LoadingOverlay from "./ui/LoadingOverlay";
 import store from "@/store";
+import ModalSucces from "./ModalSuccesTransaction";
+import { useRouter } from "expo-router";
 
 const CreateTontineForm = () => {
 
   const token = store((state) => state.token);
-
+  const router = useRouter()
   const mutation = useMutation({
     mutationFn: (data) =>
       axios.post(`http://${SERVER_IP}:8000/blockchain/createTontine`, data,{
@@ -21,6 +23,11 @@ const CreateTontineForm = () => {
         }
       }),
     onSuccess:()=>{
+      setIsVisible(true)
+      setTimeout(()=>{
+        setIsVisible(false)
+        router.push("/tontine/AllTontine")
+      })
       console.log("Terminer sans erreur");
     },
     onError:()=>{
@@ -32,6 +39,7 @@ const CreateTontineForm = () => {
   const [montant, setMontamt] = useState("");
   const [personnes, setPersonnes] = useState("");
   const [frequence, setFrequence] = useState("");
+  const [isVisible, setIsVisible] = useState(false)
 
   const handleSubmit = ()=>{
     const data = {
@@ -49,6 +57,7 @@ const CreateTontineForm = () => {
       {
         mutation.isPending && <LoadingOverlay />
       }
+      <ModalSucces isVisible={isVisible} message="Création terminé avec success" />
       <View className="mt-[5rem] mx-5 gap-3 justify-center ">
         <Input
           onChange={(text) => setNom(text)}

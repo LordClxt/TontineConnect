@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Platform } from "react-native";
+import { View, Text, ScrollView, Platform, Alert } from "react-native";
 import React, { createContext, useEffect, useRef, useState } from "react";
 import Header from "@/components/Header";
 import ActionButtons from "@/components/ActionButtons";
@@ -13,6 +13,7 @@ import axios from "axios";
 import store from "@/store";
 import LoadingOverlay from "@/components/ui/LoadingOverlay";
 import { SERVER_IP } from "@/app/constant/server_ip";
+import ModalSucces from "@/components/ModalSuccesTransaction";
 export const BottomSheetContext = createContext(null);
 const index = () => {
 
@@ -36,6 +37,7 @@ const index = () => {
   const openRetirer = () => {
     retirerrRef.current?.expand();
   };
+
   //  Input recharger
   const [numeroRecharger, setNumeroRecharger] = useState("");
   const [montantRecharger, setMontantRecharger] = useState("");
@@ -44,6 +46,8 @@ const index = () => {
   const [numeroRetirer, setNumeroRetirer] = useState("");
   const [montantRetirer, setMontantRetirer] = useState("");
 
+  // Success transaction modal
+  const [isModal, setIsModal] = useState(false)
 
   // Mutations
 
@@ -54,12 +58,17 @@ const index = () => {
           Authorization: `bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
+        
       }),
     onSuccess: () => {
+      setIsModal(true)
       queryClient.invalidateQueries({ queryKey: ["account_blockchain"] });
       setMontantRecharger("");
       setNumeroRecharger("");
-      closeRecharger();
+      setTimeout(()=>{
+        setIsModal(false)
+        closeRecharger();
+      }, 1500)
     },
   });
 
@@ -76,158 +85,162 @@ const index = () => {
   const router = useRouter();
 
   return (
-    // @ts-ignore
-    <BottomSheetContext.Provider value={{ openRecharger, openRetirer }}>
-      <View className={`w-full pb-2 h-full gap-2 bg-white`}>
-        <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
-          <Header />
-          {/* BOUTTON TONTINE */}
-          <ActionButtons />
-          {/* TRANSACTIONS */}
-          <View className="mx-7 my-5 flex-row items-center">
-            <Text style={{ flex: 3 }} className="text-xl font-bold">
-              TRANSACTIONS RECENTE
-            </Text>
-            <Button
-              rippleEffect="#6d28d9"
-              onPress={() => router.push("/transaction")}
-              className="flex-1 bg-violet-500"
-            >
-              voir tous
-            </Button>
-          </View>
-          <TransactionItems limit={3} />
-        </ScrollView>
-        {/* BottomSheet Section */}
-
-        <BottomSheet
-          index={-1}
-          snapPoints={snapPoints}
-          ref={retirerrRef}
-          enablePanDownToClose={true}
-          backgroundStyle={{
-            borderTopLeftRadius: 50,
-            borderTopRightRadius: 50,
-          }}
-        >
-          <BottomSheetView className="px-7">
-            <View
-              style={{ marginVertical: 25 }}
-              className="flex-row items-center"
-            >
-              <Text
-                style={{ fontFamily: "Poppins-Bold", flex: 7 }}
-                className="text-xl"
-              >
-                Retirer de l'argent
+    <>
+    
+      {/*  @ts-ignore */}
+      <BottomSheetContext.Provider value={{ openRecharger, openRetirer }}>
+        <View className={`w-full pb-2 h-full gap-2 bg-white`}>
+          <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+      <ModalSucces message="transaction effectué avec succès" isVisible={isModal} />
+            <Header />
+            {/* BOUTTON TONTINE */}
+            <ActionButtons />
+            {/* TRANSACTIONS */}
+            <View className="mx-7 my-5 flex-row items-center">
+              <Text style={{ flex: 3 }} className="text-xl font-bold">
+                TRANSACTIONS RECENTE
               </Text>
-              <View style={{ flex: 1 }} className="">
-                <Pressable onPress={closerRetirer}>
-                  <Entypo name="circle-with-cross" size={24} color="#6d28d9" />
-                </Pressable>
-              </View>
+              <Button
+                rippleEffect="#6d28d9"
+                onPress={() => router.push("/transaction")}
+                className="flex-1 bg-violet-500"
+              >
+                voir tous
+              </Button>
             </View>
-            <View className="gap-6">
-              <TextInput
-                keyboardType="number-pad"
-                value={numeroRetirer}
-                onChangeText={(text) => setNumeroRetirer(text)}
-                placeholder="Numéro de téléphone "
-                className="border border-gray-400 rounded-xl"
-                style={{ paddingVertical: 15, paddingHorizontal: 9 }}
-              />
-              <TextInput
-                keyboardType="number-pad"
-                value={montantRetirer}
-                onChangeText={(text) => setMontantRetirer(text)}
-                placeholder="Montant de recharge"
-                className="border border-gray-400 rounded-xl"
-                style={{ paddingVertical: 15, paddingHorizontal: 9 }}
-              />
-              <View className=" bg-violet-600 rounded ">
-                <Pressable
-                  onPress={closerRetirer}
-                  style={{ paddingVertical: 14 }}
-                  android_ripple={{ color: "#6d28d9" }}
+            <TransactionItems limit={3} />
+          </ScrollView>
+          {/* BottomSheet Section */}
+
+          <BottomSheet
+            index={-1}
+            snapPoints={snapPoints}
+            ref={retirerrRef}
+            enablePanDownToClose={true}
+            backgroundStyle={{
+              borderTopLeftRadius: 50,
+              borderTopRightRadius: 50,
+            }}
+          >
+            <BottomSheetView className="px-7">
+              <View
+                style={{ marginVertical: 25 }}
+                className="flex-row items-center"
+              >
+                <Text
+                  style={{ fontFamily: "Poppins-Bold", flex: 7 }}
+                  className="text-xl"
                 >
-                  <Text className="font-bold text-white text-center">
-                    Rétirer
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-          </BottomSheetView>
-        </BottomSheet>
-
-        {/* Recharger */}
-        <BottomSheet
-          index={-1}
-          snapPoints={snapPoints}
-          ref={recharcherRef}
-          enablePanDownToClose={true}
-          backgroundStyle={{
-            borderTopLeftRadius: 50,
-            borderTopRightRadius: 50,
-          }}
-        >
-          <BottomSheetView className="px-7">
-            <View
-              style={{ marginVertical: 25 }}
-              className="flex-row items-center"
-            >
-              <Text
-                style={{ fontFamily: "Poppins-Bold", flex: 7 }}
-                className="text-xl"
-              >
-                Recharger mon compte
-              </Text>
-              <View style={{ flex: 1 }} className="">
-                <Pressable onPress={closeRecharger}>
-                  <Entypo name="circle-with-cross" size={24} color="#6d28d9" />
-                </Pressable>
-              </View>
-            </View>
-            <View className="gap-6">
-              {rechargerMutation.isPending ? (
-                <LoadingOverlay />
-              ) : (
-                <View className="gap-2">
-                  <TextInput
-                    keyboardType="number-pad"
-                    placeholder="Numéro de téléphone "
-                    value={numeroRecharger}
-                    onChangeText={(text) => setNumeroRecharger(text)}
-                    className="border border-gray-400 rounded-xl"
-                    style={{ paddingVertical: 15, paddingHorizontal: 9 }}
-                  />
-                  <TextInput
-                    keyboardType="number-pad"
-                    placeholder="Montant de recharge"
-                    value={montantRecharger}
-                    onChangeText={(text) => setMontantRecharger(text)}
-                    className="border border-gray-400 rounded-xl"
-                    style={{ paddingVertical: 15, paddingHorizontal: 9 }}
-                  />
+                  Retirer de l'argent
+                </Text>
+                <View style={{ flex: 1 }} className="">
+                  <Pressable onPress={closerRetirer}>
+                    <Entypo name="circle-with-cross" size={24} color="#6d28d9" />
+                  </Pressable>
                 </View>
-              )}
-              <View className=" bg-violet-600 rounded ">
-                <Pressable
-                  onPress={handleRecharge}
-                  style={{ paddingVertical: 14 }}
-                  android_ripple={{ color: "#6d28d9" }}
-                >
-                  <Text className="font-bold text-white text-center">
-                    Recharger
-                  </Text>
-                </Pressable>
               </View>
-            </View>
-          </BottomSheetView>
-        </BottomSheet>
+              <View className="gap-6">
+                <TextInput
+                  keyboardType="number-pad"
+                  value={numeroRetirer}
+                  onChangeText={(text) => setNumeroRetirer(text)}
+                  placeholder="Numéro de téléphone "
+                  className="border border-gray-400 rounded-xl"
+                  style={{ paddingVertical: 15, paddingHorizontal: 9 }}
+                />
+                <TextInput
+                  keyboardType="number-pad"
+                  value={montantRetirer}
+                  onChangeText={(text) => setMontantRetirer(text)}
+                  placeholder="Montant de recharge"
+                  className="border border-gray-400 rounded-xl"
+                  style={{ paddingVertical: 15, paddingHorizontal: 9 }}
+                />
+                <View className=" bg-violet-600 rounded ">
+                  <Pressable
+                    onPress={closerRetirer}
+                    style={{ paddingVertical: 14 }}
+                    android_ripple={{ color: "#6d28d9" }}
+                  >
+                    <Text className="font-bold text-white text-center">
+                      Rétirer
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+            </BottomSheetView>
+          </BottomSheet>
 
-        {/* BottomSheet Section */}
-      </View>
-    </BottomSheetContext.Provider>
+          {/* Recharger */}
+          <BottomSheet
+            index={-1}
+            snapPoints={snapPoints}
+            ref={recharcherRef}
+            enablePanDownToClose={true}
+            backgroundStyle={{
+              borderTopLeftRadius: 50,
+              borderTopRightRadius: 50,
+            }}
+          >
+            <BottomSheetView className="px-7">
+              <View
+                style={{ marginVertical: 25 }}
+                className="flex-row items-center"
+              >
+                <Text
+                  style={{ fontFamily: "Poppins-Bold", flex: 7 }}
+                  className="text-xl"
+                >
+                  Recharger mon compte
+                </Text>
+                <View style={{ flex: 1 }} className="">
+                  <Pressable onPress={closeRecharger}>
+                    <Entypo name="circle-with-cross" size={24} color="#6d28d9" />
+                  </Pressable>
+                </View>
+              </View>
+              <View className="gap-6">
+                {rechargerMutation.isPending ? (
+                  <LoadingOverlay />
+                ) : (
+                  <View className="gap-2">
+                    <TextInput
+                      keyboardType="number-pad"
+                      placeholder="Numéro de téléphone "
+                      value={numeroRecharger}
+                      onChangeText={(text) => setNumeroRecharger(text)}
+                      className="border border-gray-400 rounded-xl"
+                      style={{ paddingVertical: 15, paddingHorizontal: 9 }}
+                    />
+                    <TextInput
+                      keyboardType="number-pad"
+                      placeholder="Montant de recharge"
+                      value={montantRecharger}
+                      onChangeText={(text) => setMontantRecharger(text)}
+                      className="border border-gray-400 rounded-xl"
+                      style={{ paddingVertical: 15, paddingHorizontal: 9 }}
+                    />
+                  </View>
+                )}
+                <View className=" bg-violet-600 rounded ">
+                  <Pressable
+                    onPress={handleRecharge}
+                    style={{ paddingVertical: 14 }}
+                    android_ripple={{ color: "#6d28d9" }}
+                  >
+                    <Text className="font-bold text-white text-center">
+                      Recharger
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+            </BottomSheetView>
+          </BottomSheet>
+
+          {/* BottomSheet Section */}
+        </View>
+      </BottomSheetContext.Provider>
+    </>
   );
 };
 
