@@ -1,56 +1,68 @@
-# Welcome to your Expo app 👋
+# TontineConnect
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Application de tontine et d'épargne sur blockchain (Ethereum / Ganache).
 
-## Get started
+| Dossier | Contenu |
+|---|---|
+| [`mobile/`](mobile) | App Expo SDK 57 (React Native, TypeScript, NativeWind, expo-router) |
+| [`backend/`](backend) | API FastAPI (PostgreSQL, JWT, web3.py, Gemini) |
+| [`docs/screenshots/`](docs/screenshots) | Captures d'écran de l'application |
 
-1. Install dependencies
+## Captures
 
-   ```bash
-   npm install
-   ```
+| Connexion | Accueil | Épargne |
+|---|---|---|
+| <img src="docs/screenshots/connexion.png" width="240"> | <img src="docs/screenshots/accueil.png" width="240"> | <img src="docs/screenshots/epargne.png" width="240"> |
 
-2. Start the app
+| Tontines | Détail d'une tontine | Créer une tontine |
+|---|---|---|
+| <img src="docs/screenshots/tontines.png" width="240"> | <img src="docs/screenshots/tontine.png" width="240"> | <img src="docs/screenshots/creer-tontine.png" width="240"> |
 
-   ```bash
-    npx expo start
-   ```
+| Cours | Assistant IA | Inscription |
+|---|---|---|
+| <img src="docs/screenshots/cours.png" width="240"> | <img src="docs/screenshots/assistant.png" width="240"> | <img src="docs/screenshots/inscription.png" width="240"> |
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Backend
 
 ```bash
-npm run reset-project
+cd backend
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements-dev.txt
+cp .env.example .env   # puis adapter les valeurs
+
+uvicorn main:app --reload      # http://127.0.0.1:8000/docs
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Variables d'environnement : `DATABASE_URL`, `SECRET_KEY`, `GEMINI_API_KEY`, `GANACHE_URL`.
 
-## Learn more
+### Tester le backend
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+cd backend && pytest
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Les tests utilisent SQLite (aucun PostgreSQL requis) et mockent la blockchain (aucun Ganache requis).
+Pour tester à la main : lancer `uvicorn`, ouvrir <http://127.0.0.1:8000/docs> (Swagger), créer un
+utilisateur via `POST /user/createUser`, puis cliquer sur **Authorize** pour obtenir un token.
 
-## Join the community
+## Mobile
 
-Join our community of developers creating universal apps.
+```bash
+cd mobile
+npm install --legacy-peer-deps
+npx expo start --go        # puis « i » pour le simulateur iOS
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-# TontineMobile_App
-# TontineMobile_App
-# TontineMobile_App
-# TontineMobile_App
-# Tontine_Connect
-# Tontine_Connect
+L'IP du backend vaut `192.168.1.12` par défaut (`mobile/constants/server_ip.ts`) et se surcharge sans toucher au code :
+
+```bash
+EXPO_PUBLIC_SERVER_IP=192.168.1.54 npx expo start --go
+```
+
+### Mettre à jour les captures
+
+Avec l'app ouverte dans le simulateur iOS :
+
+```bash
+xcrun simctl io booted screenshot docs/screenshots/<nom>.png
+```
